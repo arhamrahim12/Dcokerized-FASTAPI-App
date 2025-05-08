@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Tic-Tac-Toe</h1>
+    <div id="game">
+        <div class="cell" onclick="makeMove(0)"></div>
+        <div class="cell" onclick="makeMove(1)"></div>
+        <div class="cell" onclick="makeMove(2)"></div>
+        <div class="cell" onclick="makeMove(3)"></div>
+        <div class="cell" onclick="makeMove(4)"></div>
+        <div class="cell" onclick="makeMove(5)"></div>
+        <div class="cell" onclick="makeMove(6)"></div>
+        <div class="cell" onclick="makeMove(7)"></div>
+        <div class="cell" onclick="makeMove(8)"></div>
+    </div>
+    <button onclick="resetGame()">Reset</button>
+
+    <script>
+        async function makeMove(position) {
+            const response = await fetch(`/play/${position}`, { method: "POST" });
+            const data = await response.json();
+            if (data.board) {
+                updateBoard(data.board);
+            }
+            if (data.message) {
+                alert(data.message);
+                resetGame();
+            }
+        }
+
+        async function resetGame() {
+            const response = await fetch(`/reset`, { method: "POST" });
+            const data = await response.json();
+            updateBoard(data.board);
+        }
+
+        function updateBoard(board) {
+            const cells = document.querySelectorAll(".cell");
+            cells.forEach((cell, index) => {
+                cell.textContent = board[index];
+            });
+        }
+    </script>
+</body>
+</html>
